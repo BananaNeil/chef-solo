@@ -19,7 +19,7 @@ if ! test -f "$chef_binary"; then
          --force-yes -fuy dist-upgrade
 
      # Install RVM as root (System-wide install)
-     apt-get install -y curl git-core bzip2 build-essential zlib1g-dev libssl-dev
+     apt-get install -y curl git-core bzip2 build-essential zlib1g-dev libssl-dev libxslt-dev libxml2-dev libxslt1-dev imagemagick libmagickwand-dev libmysql-ruby libmysqlclient-dev libsqlite3-dev libncurses5-dev libreadline5-dev openssl
 
      # Note system-wide installs are not in the RVM main version
      # bash < <(curl -s https://rvm.beginrescueend.com/install/rvm)
@@ -30,8 +30,10 @@ EOP
      ) > /etc/profile.d/rvm.sh
 
      # Install Ruby using RVM
-     [[ -s "/usr/local/rvm/scripts/rvm" ]] && source "/usr/local/rvm/scripts/rvm"
-     rvm install 1.9.2-p290
+     [[ -s "/usr/local/rvm/scripts/rvm" ]] && source "/usr/local/rvm/scripts/rvm"i
+     ruby $(find / -name  extconf.rb | grep readline)
+     rvm package install readline
+     rvm install 1.9.2-p290@rails3
      rvm use 1.9.2-p290 --default
 
      # Upgrade rubygems (Latest version 1.8.10 has a lot of problems)
@@ -47,3 +49,4 @@ fi
 # Run chef-solo on server
 [[ -s "/usr/local/rvm/scripts/rvm" ]] && source "/usr/local/rvm/scripts/rvm"
 "$chef_binary" --config solo.rb --json-attributes "$json"
+
